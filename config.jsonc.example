@@ -1,0 +1,21 @@
+{
+    // SSL section;
+    "ssl": {
+        "cert": "/etc/letsencrypt/live/🛑YOUR-DOMAIN/fullchain.pem", // SSL Cert
+        "key": "/etc/letsencrypt/live/🛑YOUR-DOMAIN/privkey.pem" // SSL Key
+    },
+    // Application section;
+    "app": {
+        "use_ssl": false, // 🆘 Default: false (insecure connection!!). Add ssl -> domain, cert and key and set use_ssl to true!
+        "port": 3333, // Default: 3333; Server Web Application Port.
+        "check_workers_interval": 60 // Default: 60; Interval to check all workers in seconds. Set to 0 to disable auto-check.
+    },
+    // Database section;
+    "database": {
+        "host": "🛑YOUR-SQL-HOST", // Database host: IP Address or FQDN
+        "user": "🛑YOUR-SQL-USER", // Database username. Requires create database and table privileges.
+        "password": "🛑YOUR-SQL-PASSWORD", // Database password.
+        "database": "🛑YOUR-SQL-DATABASE", // Database name. Will be auto-created if it doesn't exist.
+        "port": 3306 // Database port. 
+    }
+}
