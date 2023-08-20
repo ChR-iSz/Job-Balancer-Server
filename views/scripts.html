@@ -850,9 +850,9 @@
             e.preventDefault();
             SelectedRowData = dataTable.row($(this).parents('tr')).data();
             let data = "<b>CURL:</b>";
-            data += `<pre class="wrap-text">curl -X POST -H "Content-Type: application/json" -d '{"script_id": "${SelectedRowData.Id}", "params": "\\"Param 1\\" \\"Param 2\\"" "userName": "<span style="color: red">YOUR-USERNAME</span>", "apiKey": "<span style="color: red">YOUR-API-KEY</span>"}' ${window.location.origin}/addJob</pre>`;
+            data += `<pre class="wrap-text">curl -X POST -H "Content-Type: application/json" -d '{"scriptId": "${SelectedRowData.Id}", "params": "\\"Param 1\\" \\"Param 2\\"" "userName": "<span style="color: red">YOUR-USERNAME</span>", "apiKey": "<span style="color: red">YOUR-API-KEY</span>"}' ${window.location.origin}/addJob</pre>`;
             data += "<b>WGET:</b>";
-            data += `<pre class="wrap-text">wget --header "Content-Type: application/json" --post-data '{"script_id": "8", "params": "\\"Param 1\\" \\"Param 2\\"" "userName": "<span style="color: red">YOUR-USERNAME</span>", "apiKey": "<span style="color: red">YOUR-API-KEY</span>"}' ${window.location.origin}/addJob</pre>`;
+            data += `<pre class="wrap-text">wget --header "Content-Type: application/json" --post-data '{"scriptId": "8", "params": "\\"Param 1\\" \\"Param 2\\"" "userName": "<span style="color: red">YOUR-USERNAME</span>", "apiKey": "<span style="color: red">YOUR-API-KEY</span>"}' ${window.location.origin}/addJob</pre>`;
             document.getElementById("exampleModalBody").innerHTML = data;
             $('#exampleModal').modal('show');
         });
