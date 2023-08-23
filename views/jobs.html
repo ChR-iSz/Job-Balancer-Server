@@ -29,6 +29,17 @@
         .hover-cursor:hover {
             cursor: pointer;
         }
+
+        .buttons-container {
+            position: sticky;
+            top: 56px;
+            /* Die Höhe der Navbar anpassen */
+            z-index: 1000;
+            background-color: #fff;
+            padding: 10px;
+            /*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+            /* Negative Margin, um den Abstand zur Navbar auszugleichen */
+        }
     </style>
 
 </head>
@@ -99,6 +110,7 @@
             </div>
         </nav>
         <!-- Sidebar -->
+
 
         <!-- Navbar -->
         <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
@@ -382,28 +394,46 @@
         <div class="container pt-4">
 
             <div class="row">
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between px-md-1">
                                 <div>
-                                    <h3 class="text-warning">ToDo</h3>
-                                    <p class="mb-0">Waiting</p>
+                                    <h3 id="RecordsTotal" class="text-warning">&nbsp;</h3>
+                                    <p class="mb-0">Total Jobs</p>
                                 </div>
                                 <div class="align-self-center">
-                                    <i class="fas fa-clock text-warning fa-3x"></i>
+                                    <i class="fas fa-star text-warning fa-3x"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between px-md-1">
                                 <div>
-                                    <h3 class="text-info">ToDo</h3>
-                                    <p class="mb-0">Running</p>
+                                    <h3 id="waitingCount" class="text-info">&nbsp;</h3>
+                                    <p class="mb-0">Waiting Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-clock text-info fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="runningCount" class="text-info">&nbsp;</h3>
+                                    <p class="mb-0">Running Jobs</p>
                                 </div>
                                 <div class="align-self-center">
                                     <i class="fas fa-rocket text-info fa-3x"></i>
@@ -412,28 +442,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between px-md-1">
                                 <div>
-                                    <h3 class="text-success">ToDo</h3>
-                                    <p class="mb-0">Success</p>
+                                    <h3 id="doneCount" class="text-success">&nbsp;</h3>
+                                    <p class="mb-0">Finished Jobs</p>
                                 </div>
                                 <div class="align-self-center">
-                                    <i class="fas fa-thumbs-up text-success fa-3x"></i>
+                                    <i class="fas fa-check text-success fa-3x"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between px-md-1">
                                 <div>
-                                    <h3 class="text-danger">ToDo</h3>
-                                    <p class="mb-0">Errors</p>
+                                    <h3 id="errorCount" class="text-danger">&nbsp;</h3>
+                                    <p class="mb-0">Errors Jobs</p>
                                 </div>
                                 <div class="align-self-center">
                                     <i class="fas fa-thumbs-down text-danger fa-3x"></i>
@@ -442,6 +474,23 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="watchdogCount" class="text-dark">&nbsp;</h3>
+                                    <p class="mb-0">Watchdog-Killed Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-stopwatch text-dark fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
 
@@ -450,16 +499,29 @@
             <!-- Section: Datatable -->
             <section class="mb-4">
                 <div class="card">
-                    <div class="card-header text-left py-3">
+                    <div
+                        class="card-header text-left py-3 d-flex justify-content-between align-items-center buttons-container">
                         <h5 class="mb-0 text-left">
-                            <strong>Job Queue</strong>
+                            <button id="killButton" type="button" class="btn btn-sm btn-primary shadow-none" disabled>
+                                Kill Job
+                            </button>
+                            <button id="restartButton" type="button" class="btn btn-sm btn-primary shadow-none"
+                                disabled>
+                                Restart Job
+                            </button>
+                            <button id="showLogButton" type="button" class="btn btn-sm btn-primary shadow-none"
+                                disabled>
+                                Show Log
+                            </button>
                         </h5>
+
+                        <div id="newSearchPlace"></div>
                     </div>
                     <div class="card-body">
+                        <!-- Body-Inhalt hier -->
                         <div class="table-responsive">
                             <table id="JobsTable" class="table table-bordered table-striped table-hover dt-responsive"
                                 style="width: 100%"></table>
-
                         </div>
                     </div>
                 </div>
@@ -496,19 +558,24 @@
 
     $(document).ready(function () {
 
+        const truncateMiddle = (str, maxLength) => (str.length > maxLength ? `${str.slice(0, maxLength / 2 - 1)}{...}${str.slice(-maxLength / 2 + 2)}` : str);
+
+
         let dataTable = $('#JobsTable').DataTable({
             'dom': 'Bfrtip', // 'Brtip',
-            //'processing': true,
+            'processing': true,
             'serverSide': true,
             'serverMethod': 'get',
+            'language': {
+                'search': '', // Leeren Sie den Suchfeld-Text
+                'searchPlaceholder': 'Search...' // Fügen Sie hier Ihren gewünschten Platzhaltertext hinzu
+            },
             'ajax': {
                 'url': '/getJobs',
                 data: function (data) {
-                    console.log(data);
                     data.page = (data.start / data.length) + 1; // Berechnung der aktuellen Seite
                     data.perPage = data.length; // Seitenlänge
                     data.search.value = data.search.value; // Übertrage den Suchbegriff
-
                 },
                 dataSrc: function (response) {
                     return response.data; // Die Datenquelle aus der Antwort
@@ -516,12 +583,30 @@
                 complete: function (response) {
                     // Die Gesamtanzahl der Einträge in der DataTable aktualisieren
                     //dataTable.rows().invalidate().draw(false);
+                    const TotalJobs = response.responseJSON.recordsTotal;
+                    const waitingCount = response.responseJSON.waitingCount;
+                    const runningCount = response.responseJSON.runningCount;
+                    const doneCount = response.responseJSON.doneCount;
+                    const errorCount = response.responseJSON.errorCount;
+                    //const killedCount = response.responseJSON.killedCount;
+                    const watchdogCount = response.responseJSON.watchdogCount;
+
+                    document.getElementById("RecordsTotal").innerText = TotalJobs;
+                    document.getElementById("waitingCount").innerText = waitingCount ?? "?";
+                    document.getElementById("runningCount").innerText = runningCount ?? "?";
+                    document.getElementById("doneCount").innerText = doneCount ?? "?";
+                    document.getElementById("errorCount").innerText = errorCount ?? "?";
+                    //document.getElementById("killedCount").innerText = killedCount ?? "?";
+                    document.getElementById("watchdogCount").innerText = watchdogCount ?? "?";
+
                 },
             },
             "pageLength": 50,
             'aaSorting': [0, "desc"],
             'responsitive': false,
-            'select': true,
+            'select': {
+                'style': 'single'
+            },
             'columns': [
                 {
                     data: 'Id',
@@ -545,7 +630,7 @@
                                 child.innerHTML += '<span class="badge badge-info">Running</span>';
                                 break;
                             case 3:
-                                child.innerHTML += '<span class="badge badge-success">Done</span>';
+                                child.innerHTML += '<span class="badge badge-success">Finished</span>';
                                 break;
                             case 4:
                                 child.innerHTML += '<span class="badge badge-danger">Error</span>';
@@ -561,12 +646,7 @@
                                 break;
                         };
 
-                        if (full.StateId == 2) {
-                            child.innerHTML += ' <span class="badge badge-danger hover-cursor kill-job">Kill Job</span>';
-
-                        }
                         return child.innerHTML;
-
                     },
                 }, {
                     data: 'HostName',
@@ -578,7 +658,9 @@
                     title: 'Command',
                     className: "nowrap",
                     render: function (data, type, full, meta) {
-                        return '<pre style="white-space: pre-line !important;">' + data + '</pre>';
+
+
+                        return '<pre style="white-space: pre-line !important;">' + truncateMiddle(data, 60) + '</pre>';
                     },
                 }, {
                     data: 'ReturnCode',
@@ -606,56 +688,148 @@
                     class: "dt-nowrap",
                     title: "Wd",
                     width: '1px',
-                }, {
-                    data: null,
-                    class: "more-modal dt-nowrap",
-                    title: "Info",
-                    width: '1px',
-                    render: function (data, type, full, meta) {
-                        return '<span class="badge badge-dark hover-cursor">More</span>';
-                    }
-                },
+                }
             ]
         });
 
-        $('#JobsTable_filter input').unbind().bind('keyup', function (e) {
-            if (e.keyCode == 13 || this.value === '') {
-                dataTable.search(this.value).draw();
+        $("#newSearchPlace").html($(".dataTables_filter"));
+
+        dataTable.on('draw', function () {
+            // Table draw finished!
+            document.getElementById("killButton").disabled = true;
+            document.getElementById("restartButton").disabled = true;
+            document.getElementById("showLogButton").disabled = true;
+
+        });
+
+        dataTable.on('select', function (e, dt, type, indexes) {
+            if (type === 'row') {
+                const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+                if (selectedRows.length == 1) {
+
+                    document.getElementById("showLogButton").disabled = false;
+
+                    switch (selectedRows[0].StateId) {
+                        case 1: // Waiting
+                            document.getElementById("killButton").disabled = true;
+                            document.getElementById("restartButton").disabled = true;
+                            break;
+                        case 2: // Running
+                            document.getElementById("killButton").disabled = false;
+                            document.getElementById("restartButton").disabled = true;
+                            break;
+                        case 3: // Finished
+                            document.getElementById("killButton").disabled = true;
+                            document.getElementById("restartButton").disabled = false;
+                            break;
+                        case 4: // Error
+                            document.getElementById("killButton").disabled = true;
+                            document.getElementById("restartButton").disabled = false;
+                            break;
+                        case 5: // Killed
+                            document.getElementById("killButton").disabled = true;
+                            document.getElementById("restartButton").disabled = false;
+                            break;
+                        case 6: // Auto-Killed by Watchdog
+                            document.getElementById("killButton").disabled = true;
+                            document.getElementById("restartButton").disabled = false;
+                            break;
+                        default:
+                            document.getElementById("killButton").disabled = true;
+                            document.getElementById("restartButton").disabled = true;
+                            break;
+                    };
+                };
             };
         });
 
-        $('#JobsTable_filter input').on('search', function () {
-            if (this.value === '') {
-                dataTable.search('').draw();
+        dataTable.on('deselect', function (e, dt, type, indexes) {
+            if (type === 'row') {
+                const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+                if (selectedRows.length == 0) {
+                    document.getElementById("killButton").disabled = true;
+                    document.getElementById("restartButton").disabled = true;
+                    document.getElementById("showLogButton").disabled = true;
+
+                };
             }
         });
 
-        $('#JobsTable tbody').on('click', 'tr td.more-modal', function (e) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            let tr = $(this).closest('tr');
-            let row = dataTable.row(tr);
-            let RowData = row.data();
+        $('#killButton').click(function (e) {
+            e.preventDefault;
+            e.stopImmediatePropagation;
+            e.stopPropagation;
+            const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+            const postData = {
+                JobId: selectedRows[0].Id,
+            };
+            fetch('/killJob', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    dataTable.ajax.reload(null, false);
+                    if (!data.result) {
+                        alert("Error sending command.");
+                    };
+                })
+                .catch(error => {
+                    dataTable.ajax.reload(null, false);
+                });
+
+            return;
+        });
+
+        $('#restartButton').click(function (e) {
+            e.preventDefault;
+            e.stopImmediatePropagation;
+            e.stopPropagation;
+            const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+            const postData = {
+                JobId: selectedRows[0].Id,
+            };
+            fetch('/restartJob', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    dataTable.ajax.reload(null, false);
+                    if (!data.result) {
+                        alert("Error sending command.");
+                    };
+                })
+                .catch(error => {
+                    dataTable.ajax.reload(null, false);
+                });
+
+            return;
+        });
+
+        $('#showLogButton').click(function (e) {
+            e.preventDefault;
+            e.stopImmediatePropagation;
+            e.stopPropagation;
+            const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+            const RowData = selectedRows[0];
+
             let jobId = RowData.Id;
             let data = {
                 JobId: jobId
             };
 
-            //console.log(RowData);
-
-            if (RowData.StateId == 2) {
-                $("#ModalKillJobButton").css("display", "block");
-            } else {
-                $("#ModalKillJobButton").css("display", "none");
-            };
-
             document.getElementById("ModalBodyPre").innerHTML = "";
 
-
-
-            if (RowData.WatchDog > 0 ) {
+            if (RowData.WatchDog > 0) {
                 document.getElementById("ModalBodyPre").innerHTML += "<p><b>Auto-Kill (Watchdog):</b><br>" + RowData.WatchDog + " seconds</p>";
-            }else{
+            } else {
                 document.getElementById("ModalBodyPre").innerHTML += "<p><b>Auto-Kill (Watchdog):</b><br>Disabled</p>";
             };
 
@@ -673,57 +847,38 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function (response) {
-
-                    //console.log(response);
-
                     let Pre = "";
-
                     try {
                         Pre = response.jobs[0].StdOut;
                     } catch (error) {
                     }
-
                     if (!Pre) {
                         document.getElementById("ModalBodyPre").innerHTML += "<p><b>Result:</b><br>No log available!</p>";
                     } else {
                         document.getElementById("ModalBodyPre").innerHTML += "<p><b>Result:</b><br>" + Pre + "</p>";
                     };
-
                     $('#DetailsModal').modal("show");
                 },
                 error: function (error) {
                 }
             });
+            return;
         });
 
-        dataTable.on('click', 'span.kill-job', function (e) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            SelectedRowData = dataTable.row($(this).parents('tr')).data();
-            if (SelectedRowData.StateId == 2) {
-                const postData = {
-                    JobId: SelectedRowData.Id,
-                };
-                fetch('/killJob', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(postData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        dataTable.ajax.reload(null, false);
-                        if (!data.result) {
-                            alert("Error sending command.");
-                        };
-                    })
-                    .catch(error => {
-                        dataTable.ajax.reload(null, false);
-                    });
+        $('#JobsTable_filter input').unbind().bind('keyup', function (e) {
+            if (e.keyCode == 13 || this.value === '') {
+                dataTable.search(this.value).draw();
             };
-
         });
+
+        $('#JobsTable_filter input').on('search', function () {
+            if (this.value === '') {
+                dataTable.search('').draw();
+            }
+        });
+
+
+
     });
 </script>
 

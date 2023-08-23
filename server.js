@@ -535,6 +535,40 @@ async function main() {
     });
 
     /**
+ * ✅ API - Restart Job;
+ */
+    app.post('/restartJob', async (req, res) => {
+        if (req.session.user) {
+            const { JobId } = req.body;
+            try {
+                let BestWorker = await tools.getBestWorker();
+                let ApiKey = BestWorker.ApiKey;
+                if (BestWorker.IpAddress) {
+                    let AxiosResult;
+                    const Protokoll = BestWorker.UseSSL ? 'https://' : 'http://';
+                    try {
+                        if (BestWorker.Fqdn) {
+                            AxiosResult = await axios.post(Protokoll + BestWorker.Fqdn + ':' + BestWorker.Port + '/executeJob', { JobId, ApiKey });
+                        } else {
+                            AxiosResult = await axios.post(Protokoll + BestWorker.IpAddress + ':' + BestWorker.Port + '/executeJob', { JobId, ApiKey });
+                        };
+                        res.status(200).json(AxiosResult.data);
+                    } catch (error) {
+                        console.error(colors.red(`[ERROR] Sending job to worker failed! (5)`));
+                        throw error;
+                    };
+                } else {
+                    throw new Error('BestWorker.IpAddress is not available.');
+                }
+            } catch (error) {
+                throw error;
+            }
+        } else {
+            res.redirect('/login');
+        }
+    });
+
+    /**
      * ✅ API - Get Clients;
      */
     app.get('/getClients', function (req, res, next) {
@@ -575,15 +609,37 @@ async function main() {
             sql += `
                 ORDER BY JOBS.Id DESC LIMIT ${perPage} OFFSET ${offset};
             `;
-            let countSql = 'SELECT COUNT(*) AS totalCount FROM JOBS;';
+            let countSql = `SELECT COUNT(*) AS totalCount,
+            (SELECT COUNT(*) FROM JOBS WHERE StateId = 1) as waitingCount,
+            (SELECT COUNT(*) FROM JOBS WHERE StateId = 2) as runningCount,
+            (SELECT COUNT(*) FROM JOBS WHERE StateId = 3) as doneCount,
+            (SELECT COUNT(*) FROM JOBS WHERE StateId = 4) as errorCount,
+            (SELECT COUNT(*) FROM JOBS WHERE StateId = 5) as killedCount,
+            (SELECT COUNT(*) FROM JOBS WHERE StateId = 6) as watchdogCount
+
+            FROM JOBS;`;
             db.query(sql, (err, jobs) => {
                 if (err) throw err;
                 db.query(countSql, (countErr, countResult) => {
                     if (countErr) throw countErr;
+
                     const totalCount = countResult[0].totalCount;
+                    const waitingCount = countResult[0].waitingCount;
+                    const runningCount = countResult[0].runningCount;
+                    const doneCount = countResult[0].doneCount;
+                    const errorCount = countResult[0].errorCount;
+                    const killedCount = countResult[0].killedCount;
+                    const watchdogCount = countResult[0].watchdogCount;
+
                     const response = {
                         draw: req.query.draw,
                         recordsTotal: totalCount,
+                        waitingCount: waitingCount,
+                        runningCount: runningCount,
+                        doneCount: doneCount,
+                        errorCount: errorCount,
+                        killedCount: killedCount,
+                        watchdogCount: watchdogCount,
                         recordsFiltered: totalCount,
                         data: jobs.slice(0, perPage)
                     };
