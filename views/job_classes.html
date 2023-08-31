@@ -26,104 +26,43 @@
         td.dt-nowrap {
             white-space: nowrap;
         }
-
-        #editor {
-            width: 100%;
-            height: 400px;
-            background-color: #111;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            border: none;
-            resize: none;
-            outline: none;
-            padding: 10px;
-        }
-
-        .hover-cursor:hover {
-            cursor: pointer;
-        }
-
-        .wrap-text {
-            white-space: pre-wrap;
-        }
-
-        .left-align {
-            text-align: left;
-        }
     </style>
 
 </head>
 
 <body>
 
-    <!-- Example Modal -->
-    <div class="modal modal-lg fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+
+    <!-- Das Modal -->
+    <div class="modal fade" id="jobClassesModal" tabindex="-1" aria-labelledby="jobClassesModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Examples</h5>
-                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div id="exampleModalBody" class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-mdb-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Script Modal -->
-    <div class="modal fade" id="scriptModal" tabindex="-1" aria-labelledby="scriptModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="scriptModalLabel"></h5>
+                    <h5 class="modal-title" id="jobClassesModalLabel"></h5>
                     <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form>
-
-                        <div class="mb-3">
-                            <label for="customInput" class="form-label">Interpreter</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="Interpreter"
-                                    style="border-top-right-radius: 4px; border-bottom-right-radius: 4px;" required>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                        data-mdb-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                        id="customButton"
-                                        style="height: 35.5px; margin-left: 10px; border-radius: 4px; border-width: 1px; border-color: rgb(189, 189, 189);;">Select</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">/bin/sh</a>
-                                        <a class="dropdown-item" href="#">/bin/bash</a>
-                                        <a class="dropdown-item" href="#">/usr/bin/node</a>
-                                        <a class="dropdown-item" href="#">/usr/bin/php</a>
-                                        <a class="dropdown-item" href="#">/usr/bin/python</a>
-                                        <a class="dropdown-item" href="#">/usr/bin/python3</a>
-                                        <a class="dropdown-item" href="#">/usr/bin/perl</a>
-                                        <a class="dropdown-item" href="#">/usr/bin/ruby</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <sup style="margin-left: 5px; font-size: 10px; color: red">*Required</sup>
-                        </div>
-
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" required class="form-control" id="Name">
                             <sup style="margin-left: 5px; font-size: 10px; color: red">*Required</sup>
+
                         </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">MaxJobs</label>
+                            <input type="text" required class="form-control" id="MaxJobs">
+                            <sup style="margin-left: 5px; font-size: 10px; color: red">*Required</sup>
+                        </div>
+
                     </form>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Abort</button>
-                    <button type="button" class="btn btn-primary d-none" id="bt_createScript">Save changes</button>
-                    <button type="button" class="btn btn-primary d-none" id="bt_renameScript">Save changes</button>
+                    <button type="button" class="btn btn-primary d-none" id="bt_createJobClass">Save changes</button>
+                    <button type="button" class="btn btn-primary d-none" id="bt_editJobClass">Save changes</button>
                 </div>
             </div>
         </div>
@@ -131,27 +70,7 @@
 
 
 
-    <!-- Editor Modal -->
-    <div class="modal fade" id="editorModal" tabindex="-1" role="dialog" aria-labelledby="editorModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editorModalLabel"></h5>
-                    <button type="button" class="close" data-mdb-dismiss="modal" aria-label="Schließen">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <textarea id="editor" rows="20" class="form-control"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Abort</button>
-                    <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 
 
@@ -172,7 +91,8 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
-                    <a href="job_classes" class="list-group-item list-group-item-action py-2 ripple">
+                    <a href="job_classes" class="list-group-item list-group-item-action py-2 ripple active"
+                        aria-current="true">
                         <i class="fas fa-cubes fa-fw me-3"></i><span>Job Classes</span>
                     </a>
 
@@ -184,8 +104,7 @@
                         <i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
                     </a>
 
-                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple active"
-                        aria-current="true">
+                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
                     </a>
 
@@ -471,70 +390,24 @@
     <!--Main layout-->
     <main style="margin-top: 58px">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div class="container pt-4">
 
-            <div class="row">
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-warning">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-question text-warning fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-info">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="far fa-question text-info fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-success">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-question text-success fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-danger">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="far fa-question text-danger fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
 
 
@@ -544,24 +417,21 @@
                 <div class="card">
                     <div class="card-header text-left py-3">
                         <h5 class="mb-0 text-left">
-                            <strong>Scripts</strong>
+                            <strong>Job-Classes</strong>
                         </h5>
                     </div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-sm btn-primary createButton shadow-none">
+                        <button type="button" id="createButton" class="btn btn-sm btn-primary createButton shadow-none">
                             Create
                         </button>
-                        <button type="button" class="btn btn-sm btn-primary renameButton shadow-none">
-                            Rename
-                        </button>
-                        <button type="button" class="btn btn-sm btn-primary editButton shadow-none">
+                        <button type="button" id="editButton" class="btn btn-sm btn-primary editButton shadow-none">
                             Edit
                         </button>
-                        <button type="button" class="btn btn-sm btn-primary deleteButton shadow-none">
+                        <button type="button" id="deleteButton" class="btn btn-sm btn-primary deleteButton shadow-none">
                             Delete
                         </button>
                         <div class="table-responsive">
-                            <table id="ScriptsTable"
+                            <table id="JobClassesTable"
                                 class="table table-bordered table-striped table-hover dt-responsive"
                                 style="width: 100%"></table>
                         </div>
@@ -600,26 +470,18 @@
 
 <script>
 
-    var OldFileName;
-    const editor = document.getElementById('editor');
-    const saveBtn = document.getElementById('saveBtn');
-    const closeBtn = document.getElementById('closeBtn');
-
     $(document).ready(function () {
 
-        /**
-         * [TABLE] Scripts...
-         * */
-        const dataTable = $('#ScriptsTable').DataTable({
+        const dataTable = $('#JobClassesTable').DataTable({
             dom: 'Brtip',
             processing: false,
             serverSide: false,
             serverMethod: 'get',
             ajax: {
-                url: '/getScripts',
-                dataSrc: 'scripts'
+                url: '/getJobClasses',
+                dataSrc: 'job_classes'
             },
-            aaSorting: [2, "asc"],
+            aaSorting: [],
             responsitive: true,
             select: true,
             columns: [
@@ -627,110 +489,118 @@
                     data: 'Id',
                     title: 'Id',
                     width: '1px',
-                    className: 'dt-nowrap',
-                }, {
-                    data: 'Interpreter',
-                    title: 'Interpreter',
-                    width: '1px',
-                    className: 'dt-nowrap',
+                    className: "dt-nowrap",
                 }, {
                     data: 'Name',
                     title: 'Name',
-                    width: '1px',
-                    className: 'dt-nowrap',
-                }, {
-                    data: null,
-                    title: 'Example',
-                    width: '1px',
-                    className: 'dt-nowrap',
-                    render: function (data, type, full, meta) {
-                        return '<span class="badge badge-primary hover-cursor openExampleModal">Example</span>';
-                    }
+
+                    className: "dt-nowrap",
                 },
-            ],
+                {
+                    data: 'MaxJobs',
+                    title: 'Max Jobs',
+                    width: '1px',
+                    className: "dt-nowrap",
+                    render: function (data, type, full, meta) {
+                        return data;
+                    }
+                }
+
+            ]
         });
 
-        /**
-         * [BUTTON] Create Script...
-         * */
+        dataTable.on('draw', function () {
+            // Table draw finished!
+            document.getElementById("createButton").disabled = false;
+            document.getElementById("editButton").disabled = true;
+            document.getElementById("deleteButton").disabled = true;
+        });
+
+        dataTable.on('select', function (e, dt, type, indexes) {
+            if (type === 'row') {
+                const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+
+                if (selectedRows.length == 1) {
+
+                    if ( selectedRows[0].Id == 1 ) {
+                        document.getElementById("editButton").disabled = false;
+                        document.getElementById("deleteButton").disabled = true;
+                    }else{
+                        document.getElementById("editButton").disabled = false;
+                    document.getElementById("deleteButton").disabled = false;
+                    }
+
+
+                } else {
+                    document.getElementById("editButton").disabled = true;
+                    document.getElementById("deleteButton").disabled = true;
+                };
+            };
+        });
+
+        dataTable.on('deselect', function (e, dt, type, indexes) {
+            if (type === 'row') {
+                const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+                if (selectedRows.length == 0 || selectedRows.length > 1) {
+                    document.getElementById("editButton").disabled = true;
+                    document.getElementById("deleteButton").disabled = true;
+                };
+            };
+        });
+
         $('.createButton').click(function (e) {
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
-            $("#bt_createScript").addClass('d-block').removeClass('d-none');
-            $("#bt_renameScript").addClass('d-none').removeClass('d-block');
-            document.getElementById("scriptModalLabel").innerText = "Create Script";
+            $("#bt_createJobClass").addClass('d-block').removeClass('d-none');
+            $("#bt_editJobClass").addClass('d-none').removeClass('d-block');
+            document.getElementById("jobClassesModalLabel").innerText = "Create Job-Class";
             document.getElementById("Name").value = "";
-            document.getElementById("Interpreter").value = "";
-
-            $('#scriptModal').modal('show');
+            document.getElementById("MaxJobs").value = "";
+            $('#jobClassesModal').modal('show');
             return;
         });
 
-        /**
-         * [BUTTON] Rename Script...
-         * */
-        $('.renameButton').click(function (e) {
-            e.preventDefault;
-            e.stopImmediatePropagation;
-            e.stopPropagation;
-            $("#bt_createScript").addClass('d-none').removeClass('d-block');
-            $("#bt_renameScript").addClass('d-block').removeClass('d-none');
-            document.getElementById("scriptModalLabel").innerText = "Rename Script";
-            const selectedRows = dataTable.rows('.selected').data();
-            if (selectedRows.length > 0) {
-                document.getElementById("Name").value = selectedRows[0].Name;
-                document.getElementById("Interpreter").value = selectedRows[0].Interpreter;
-                OldFileName = selectedRows[0].Name;
-                $('#scriptModal').modal('show');
-            } else {
-                alert("No item selected!");
-            }
-            return;
-        });
-
-        /**
-         * [BUTTON] Edit Script...
-         * */
         $('.editButton').click(function (e) {
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
+            $("#bt_createJobClass").addClass('d-none').removeClass('d-block');
+            $("#bt_editJobClass").addClass('d-block').removeClass('d-none');
+            document.getElementById("jobClassesModalLabel").innerText = "Edit Job-Class";
             const selectedRows = dataTable.rows('.selected').data();
-            document.getElementById("editorModalLabel").innerText = selectedRows[0].Name;
             if (selectedRows.length > 0) {
-                // Dateiinhalt vom Server abrufen und in den Editor einfügen
-                fetch('/editScript?fileName=' + selectedRows[0].Name) // Dateiname anpassen
-                    .then(response => response.text())
-                    .then(data => editor.value = data)
-                    .catch(error => console.error('Fehler beim Laden der Datei:', error));
-
-                $('#editorModal').modal('show');
+                document.getElementById("Name").value = selectedRows[0].Name;
+                document.getElementById("MaxJobs").value = selectedRows[0].MaxJobs;
+                $('#jobClassesModal').modal('show');
             } else {
                 alert("No item selected!");
             }
             return;
         });
 
-        /**
-         * [BUTTON] Edit Script...
-         * */
         $('.deleteButton').click(function (e) {
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
             const selectedRows = dataTable.rows('.selected').data();
-            document.getElementById("editorModalLabel").innerText = selectedRows[0].Name;
+
+            if ( selectedRows[0].Id == 1 ) {
+                alert("The default job class cannot be deleted.");
+                return;
+            };
+
+            document.getElementById("jobClassesModalLabel").innerText = selectedRows[0].Name;
             if (selectedRows.length > 0) {
-                const editedData = {
-                    fileName: selectedRows[0].Name,
+                const deleteData = {
+                    Id: selectedRows[0].Id,
                 };
-                fetch('/deleteScript', {
+                fetch('/deleteJobClass', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(editedData)
+                    body: JSON.stringify(deleteData)
                 })
                     .then(response => response.json())
                     .then(data => {
@@ -753,25 +623,18 @@
             return;
         });
 
-        /**
-         * Interpreter select changed;
-         * */
-        $('.dropdown-item').on('click', function () {
-            $('#Interpreter').val($(this).text());
-        });
+        $('#bt_createJobClass').click(function (e) {
 
-        /**
-         * [FUNCTION] Create Script...
-         * */
-        $('#bt_createScript').click(function (e) {
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
+
             const editedData = {
-                interpreter: $('#Interpreter').val(),
-                fileName: $('#Name').val(),
+                Name: $('#Name').val(),
+                MaxJobs: $('#MaxJobs').val(),
             };
-            fetch('/createScript', {
+
+            fetch('/createJobClass', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -782,36 +645,31 @@
                 .then(data => {
                     if (data.result) {
                         dataTable.ajax.reload(null, false);
-                        $('#scriptModal').modal('hide');
+                        $('#jobClassesModal').modal('hide');
                     } else {
-                        if (data.message) {
-                            alert(data.message);
-                        } else {
-                            alert("Unknown error!");
-                        };
+                        alert("Error. Please check your input!");
                     };
                 })
                 .catch(error => {
-                    alert("Unknown error!");
+                    alert("Error. Please check your input!");
                 });
         });
 
-        /**
-         * [FUNCTION] Rename Script...
-         * */
-        $('#bt_renameScript').click(function (e) {
+
+        $('#bt_editJobClass').click(function (e) {
+
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
+
             const selectedRows = dataTable.rows('.selected').data();
             const editedData = {
                 Id: selectedRows[0].Id,
-                interpreter: $('#Interpreter').val(),
-                oldFileName: OldFileName,
-                newFileName: $('#Name').val(),
+                Name: $('#Name').val(),
+                MaxJobs: $('#MaxJobs').val(),
             };
 
-            fetch('/renameScript', {
+            fetch('/editJobClass', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -822,64 +680,14 @@
                 .then(data => {
                     if (data.result) {
                         dataTable.ajax.reload(null, false);
-                        $('#scriptModal').modal('hide');
+                        $('#jobClassesModal').modal('hide');
                     } else {
-                        if (data.message) {
-                            alert(data.message);
-                        } else {
-                            alert("Unknown error!");
-                        };
+                        alert("Error. Please check your input!");
                     };
                 })
                 .catch(error => {
-                    alert("Unknown error!");
+                    alert("Error. Please check your input!");
                 });
-        });
-
-        // Speichern der Datei auf dem Server, wenn der "Speichern"-Button geklickt wird
-        saveBtn.addEventListener('click', () => {
-            const selectedRows = dataTable.rows('.selected').data();
-            const fileContent = editor.value;
-            const FileName = selectedRows[0].Name;
-            fetch('/saveScript', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `fileName=${FileName}&fileContent=${encodeURIComponent(fileContent)}`
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    $('#editorModal').modal('hide'); // Modal nach dem Speichern schließen
-                })
-                .catch(error => console.error('Fehler beim Speichern der Datei:', error));
-        });
-
-        dataTable.on('click', 'span.openExampleModal', function (e) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            SelectedRowData = dataTable.row($(this).parents('tr')).data();
-            let data = `<pre class="wrap-text left-align">
-                    curl -X POST -H "Content-Type: application/json" -d '{
-                        "scriptId": "${SelectedRowData.Id}",
-                        "params": ["Value1", "Value2"],
-                        "userName": "<span style="color: red">YOUR-USERNAME</span>",
-                        "apiKey": "<span style="color: red">YOUR-API-KEY</span>"
-                    }' ${window.location.origin}/addJob
-                </pre>
-            `;
-            data += `<pre class="wrap-text">
-                    wget --header "Content-Type: application/json" --post-data '{
-                        "scriptId": "${SelectedRowData.Id}",
-                        "params": ["Value1", "Value2"],
-                        "userName": "<span style="color: red">YOUR-USERNAME</span>",
-                        "apiKey": "<span style="color: red">YOUR-API-KEY</span>"
-                    }' ${window.location.origin}/addJob
-                </pre>
-            `;
-            document.getElementById("exampleModalBody").innerHTML = data;
-            $('#exampleModal').modal('show');
         });
     });
 </script>

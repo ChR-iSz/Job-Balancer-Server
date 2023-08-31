@@ -378,7 +378,24 @@ async function getBestWorker() {
 
         return await new Promise((resolve, reject) => {
 
-            const GetBestWorker = 'SELECT Id, Serial, ApiKey, IpAddress, Port, UseSSL, Fqdn, (SELECT COUNT(*) FROM JOBS WHERE WorkerId = CLIENTS.Id AND ( JOBS.StateId = 1 OR JOBS.StateId = 2) ) as RunningJobs from CLIENTS WHERE StateId = 1 ORDER BY RunningJobs ASC, HostName ASC LIMIT 1;';
+            //const GetBestWorker = 'SELECT Id, Serial, ApiKey, IpAddress, Port, UseSSL, Fqdn, (SELECT COUNT(*) FROM JOBS WHERE WorkerId = CLIENTS.Id AND ( JOBS.StateId = 1 OR JOBS.StateId = 2) ) as RunningJobs from CLIENTS WHERE StateId = 1 ORDER BY RunningJobs ASC, HostName ASC LIMIT 1;';
+
+            const GetBestWorker = `SELECT 
+            C.Id, C.Serial, C.ApiKey, C.IpAddress, C.Port, C.UseSSL, C.Fqdn,
+            (
+                SELECT COUNT(*) 
+                FROM JOBS 
+                WHERE WorkerId = C.Id 
+                AND (JOBS.StateId = 1 OR JOBS.StateId = 2)
+            ) AS RunningJobs,
+            JC.MaxJobs
+            FROM CLIENTS AS C
+            JOIN JOB_CLASSES AS JC ON C.JobClassId = JC.Id
+            WHERE C.StateId = 1
+            HAVING RunningJobs < JC.MaxJobs
+            ORDER BY RunningJobs ASC, C.HostName ASC 
+            LIMIT 1;`;
+
             connection.query(GetBestWorker, (err, res) => {
                 if (err) {
                     return reject(false);
@@ -405,8 +422,8 @@ async function getBestWorker() {
         });
 
     } catch (error) {
-
-        console.error(colors.red('[ERROR] getBestWorker - UNEXPECTED ERROR!'));
+        // 🆘 No bestworker found !! What we can do ??? Still keep the waiting status for a job ?
+        console.error(colors.red(`[ERROR] getBestWorker - ${error}`));
         return false;
 
     };

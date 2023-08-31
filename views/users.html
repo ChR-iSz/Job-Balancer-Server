@@ -90,6 +90,10 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
+                    <a href="job_classes" class="list-group-item list-group-item-action py-2 ripple">
+						<i class="fas fa-cubes fa-fw me-3"></i><span>Job Classes</span>
+					</a>
+
                     <a href="clients" class="list-group-item list-group-item-action py-2 ripple">
 						<i class="fas fa-person-digging fa-fw me-3"></i><span>Workers</span>
                     </a>
@@ -481,12 +485,17 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-sm btn-primary createButton shadow-none">
+                        <button type="button" id="createButton" class="btn btn-sm btn-primary createButton shadow-none">
                             Create
                         </button>
-                        <button type="button" class="btn btn-sm btn-primary editButton shadow-none">
+                        <button type="button" id="editButton" class="btn btn-sm btn-primary editButton shadow-none">
                             Edit
                         </button>
+                        <!--
+                        <button type="button" id="deleteButton" class="btn btn-sm btn-primary deleteButton shadow-none">
+                            Delete
+                        </button>
+                    -->
                         <div class="table-responsive">
                             <table id="UsersTable" class="table table-bordered table-striped table-hover dt-responsive"
                                 style="width: 100%"></table>

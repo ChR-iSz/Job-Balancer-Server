@@ -67,52 +67,46 @@ Depending on the configuration, the web interface can be accessed via the URL `h
 Comit a job via curl or wget, ect:
 
 ### Normal Job (without auto-kill-watchdog)
-```
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{
     "command": "echo \"Hello World\"",
-    "userName": "{your-username}",
-    "apiKey": "{your-apikey}"
-}' https://{your-domain}:{your-port}/addJob
+    "userName": "your-username",
+    "apiKey": "your-apikey"
+}' https://your-domain:your-port/addJob
 ```
 
-### Normal Job (with auto-kill-watchdog)
-```
+### Normal Job (with auto-kill-watchdog after 10 seconds)
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{
     "command": "echo \"Hello World\"; sleep 20",
     "watchdog": 10,
-    "userName": "{your-username}",
-    "apiKey": "{your-apikey}"
-}' https://{your-domain}:{your-port}/addJob
+    "userName": "your-username",
+    "apiKey": "your-apikey"
+}' https://your-domain:your-port/addJob
 ```
 
 ### Script Job (see webinterface) (without auto-kill-watchdog)
 Params are optional and not required if your script don't need params.
-```
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{
     "scriptId": "1",
-    "params": {
-        "param1": "Value",
-        "param2": "Value"
-    },
-    "userName": "{your-username}",
-    "apiKey": "{your-apikey}"
-}' https://{your-domain}:{your-port}/addJob
+    "params": ["Value1", "Value2"],
+    "userName": "your-username",
+    "apiKey": "your-apikey"
+}' https://your-domain:your-port/addJob
 ```
 
 ### Script Job (see webinterface) (with auto-kill-watchdog after 10 Seconds) (Make sure your script running longer as 10 seconds for testing).
 Params are optional and not required if your script don't need params.
 
-```
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{
     "scriptId": "1",
-    "params": {
-        "param1": "Value",
-        "param2": "Value"
-    },
+    "params": ["Value1", "Value2"],
     "watchdog": 10,
-    "userName": "{your-username}",
-    "apiKey": "{your-apikey}"
-}' https://{your-domain}:{your-port}/addJob
+    "userName": "your-username",
+    "apiKey": "your-apikey"
+}' https://your-domain:your-port/addJob
 ```
 
 ## Outlook / Roadmap

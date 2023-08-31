@@ -245,12 +245,113 @@ async function main() {
         };
     });
 
+
+
+
+
+
+
+
+    /**
+     * ✅ API - Get JobClasses;
+     */
+    app.get('/getJobClasses', function (req, res, next) {
+        if (req.session.user) {
+            let sql = 'SELECT Id, Name, MaxJobs FROM JOB_CLASSES';
+            db.query(sql, (err, job_classes) => {
+                if (err) throw err;
+                const data = { job_classes };
+                res.json(data)
+            });
+        } else {
+            res.redirect('/login');
+        };
+    });
+
+    /**
+     * ✅ Create JobClass;
+     */
+    app.post('/createJobClass', async (req, res) => {
+        if (req.session.user) {
+            if (validator.isEmpty(req.body.Name)) throw res.json({ result: false, message: "Required", object: "Name" });
+            if (validator.isEmpty(req.body.MaxJobs)) throw res.json({ result: false, message: "Required", object: "MaxJobs" });
+
+            let sql = 'INSERT INTO JOB_CLASSES (Name, MaxJobs) VALUES (?, ?);';
+            db.query(sql, [req.body.Name, req.body.MaxJobs], (err, jobs) => {
+                if (err) {
+                    res.json({ result: false, message: 'Unexpected error!' });
+                } else {
+                    res.json({ result: true, message: 'Insert job_class success!' });
+                };
+            });
+        } else {
+            res.redirect('/login');
+        };
+    });
+
+    /**
+     * ✅ Edit JobClass;
+     */
+    app.post('/editJobClass', (req, res) => {
+        if (req.session.user) {
+            if (validator.isEmpty(req.body.Name)) throw res.json({ result: false, message: "Required", object: "Name" });
+            if (validator.isEmpty(req.body.MaxJobs)) throw res.json({ result: false, message: "Required", object: "MaxJobs" });
+
+            let sql = 'UPDATE JOB_CLASSES SET Name = ?, MaxJobs = ? WHERE Id = ?;';
+            db.query(sql, [req.body.Name, req.body.MaxJobs, req.body.Id], (err, jobs) => {
+                if (err) {
+                    res.json({ result: false, message: 'Unexpected error!' });
+                } else {
+                    res.json({ result: true, message: 'Update job_class success!' });
+                };
+            });
+        } else {
+            res.redirect('/login');
+        };
+    });
+
+    /**
+     * ✅ Delete JobClass;
+     */
+    app.post('/deleteJobClass', (req, res) => {
+        if (req.session.user) {
+            let sql = 'DELETE FROM JOB_CLASSES WHERE Id = ?;';
+            db.query(sql, [req.body.Id], (err, jobs) => {
+                if (err) {
+                    res.json({ result: false, message: 'Unexpected error!' });
+                } else {
+                    res.json({ result: true, message: 'Deleting job_class successfully!' });
+                };
+            });
+        } else {
+            res.redirect('/login');
+        };
+    });
+
+
+
+
+
+
+
+
     /**
      * ✅ [VIEW] - Clients;
      */
     app.get("/clients", (req, res) => {
         if (req.session.user) {
             res.sendFile(path.join(__dirname, 'views/clients.html'))
+        } else {
+            res.redirect('/login');
+        };
+    });
+
+    /**
+     * ✅ [VIEW] - JobClasses;
+     */
+    app.get("/job_classes", (req, res) => {
+        if (req.session.user) {
+            res.sendFile(path.join(__dirname, 'views/job_classes.html'))
         } else {
             res.redirect('/login');
         };
@@ -428,72 +529,82 @@ async function main() {
      * ✅ API - Add Job;
      */
     app.post('/addJob', async (req, res) => {
-        let { scriptId, command, params = {}, userName, apiKey, watchdog = 0 } = req.body;
+        let { scriptId, command, params = [], userName, apiKey, watchdog = 0 } = req.body;
+
+        params = params || [];
+        const paramString = params.map(param => `"${param}"`).join(' ');
+
         if (!apiKey) { return res.status(403).send(); };
         const findUserQuery = 'SELECT * FROM USERS WHERE UserName = ? AND ApiKey = ?';
         db.query(findUserQuery, [userName, apiKey], async (err, users) => {
+
             if (err) {
                 console.error(`[ERROR] Database query error: ${err}`);
                 return res.status(500).json({ message: 'Internal server error.' });
             };
+
             if (users.length === 0) {
                 return res.status(401).json({ message: 'Unauthorized. Invalid Usename or/and API key.' });
             };
+
             if (scriptId && scriptId > 0) {
+
                 const getScriptQuery = 'SELECT Interpreter, Name from SCRIPTS WHERE Id = ?';
+
                 db.query(getScriptQuery, [scriptId], async (err, script) => {
+
                     if (err) {
                         console.error(`[ERROR] Database query error: ${err}`);
                         return res.status(500).json({ message: 'Internal server error.' });
                     };
+
                     if (script.length === 0 || script.length > 1) {
                         return res.status(401).json({ message: 'Script not found!' });
                     };
+
                     command = script[0].Interpreter + " " + script[0].Name;
-                    if (Object.keys(params).length > 0) {
-                        let paramString = '';
-                        for (const paramKey in params) {
-                            paramString += `"${params[paramKey]}" `;
-                        };
-                        paramString = paramString.trim();
+
+                    if (paramString) {
                         command += " " + paramString;
-                        const AddJob = 'INSERT INTO JOBS (StateId, Command, ScriptId, WatchDog, CreatedAt) VALUES (1, ?, ?, ?, NOW());';
-                        db.query(AddJob, [command, scriptId, watchdog], async (err, result) => {
-                            if (err) {
-                                console.error(`[ERROR] Error on adding job: ${err}`);
-                                return res.status(400).json({ message: 'Error on adding job.' });
-                            } else {
-                                var JobId = result.insertId;
-                                console.info(`[INFO] New Job with Id ${JobId} added!`);
-                                res.status(200).json({ result: true, message: 'Add job sucessfully.' });
-                                let BestWorker = await tools.getBestWorker();
-                                if (BestWorker) {
-                                    let ApiKey = BestWorker.ApiKey;
+                    }
+
+                    const AddJob = 'INSERT INTO JOBS (StateId, Command, ScriptId, WatchDog, CreatedAt) VALUES (1, ?, ?, ?, NOW());';
+                    db.query(AddJob, [command, scriptId, watchdog], async (err, result) => {
+                        if (err) {
+                            console.error(`[ERROR] Error on adding job: ${err}`);
+                            return res.status(400).json({ message: 'Error on adding job.' });
+                        } else {
+                            var JobId = result.insertId;
+                            console.info(`[INFO] New Job with Id ${JobId} added!`);
+                            res.status(200).json({ result: true, message: 'Add job sucessfully.' });
+                            let BestWorker = await tools.getBestWorker();
+                            if (BestWorker) {
+                                let ApiKey = BestWorker.ApiKey;
+                                try {
                                     try {
-                                        try {
-                                            let AxiosResult;
-                                            const Protokoll = BestWorker.UseSSL ? 'https://' : 'http://';
+                                        let AxiosResult;
+                                        const Protokoll = BestWorker.UseSSL ? 'https://' : 'http://';
 
-                                            if (BestWorker.Fqdn) {
-                                                AxiosResult = await axios.post(Protokoll + BestWorker.Fqdn + ':' + BestWorker.Port + '/executeJob', { JobId, ApiKey });
-                                            } else {
-                                                AxiosResult = await axios.post(Protokoll + BestWorker.IpAddress + ':' + BestWorker.Port + '/executeJob', { JobId, ApiKey });
-                                            };
-
-                                        } catch (error) {
-                                            console.error(colors.red(`[ERROR] Sending job to worker failed! (1)`));
-                                            throw error;
+                                        if (BestWorker.Fqdn) {
+                                            AxiosResult = await axios.post(Protokoll + BestWorker.Fqdn + ':' + BestWorker.Port + '/executeJob', { JobId, ApiKey });
+                                        } else {
+                                            AxiosResult = await axios.post(Protokoll + BestWorker.IpAddress + ':' + BestWorker.Port + '/executeJob', { JobId, ApiKey });
                                         };
+
                                     } catch (error) {
-                                        console.error(colors.red(`[ERROR] Sending job to worker failed! (2)`));
+                                        console.error(colors.red(`[ERROR] Sending job to worker failed! (1)`));
+                                        throw error;
                                     };
-                                } else {
-                                    // ❌❌❌❌ TODO: Job to other worker, or set job as error or keep waiting ?? !!
-                                    console.error(colors.red(`[ERROR] No worker found for this Job. Job goes to waiting!`));
+                                } catch (error) {
+                                    console.error(colors.red(`[ERROR] Sending job to worker failed! (2)`));
                                 };
+                            } else {
+                                // ❌❌❌❌ TODO: Job to other worker, or set job as error or keep waiting ?? !!
+                                console.error(colors.red(`[ERROR] No worker found for this Job. Job goes to waiting!`));
                             };
-                        });
-                    };
+                        };
+                    });
+
                 });
             } else {
                 const AddJob = 'INSERT INTO JOBS (StateId, Command, WatchDog, CreatedAt) VALUES (1, ?, ?, NOW());';
@@ -573,7 +684,7 @@ async function main() {
      */
     app.get('/getClients', function (req, res, next) {
         if (req.session.user) {
-            let sql = 'SELECT Id, StateId, HostName, IpAddress, Port, UseSSL, Fqdn FROM CLIENTS';
+            let sql = 'SELECT CLIENTS.Id, CLIENTS.StateId, CLIENTS.HostName, CLIENTS.IpAddress, CLIENTS.Port, CLIENTS.UseSSL, CLIENTS.Fqdn, JOB_CLASSES.Name as JobClassName FROM CLIENTS LEFT JOIN JOB_CLASSES ON JOB_CLASSES.Id = CLIENTS.JobClassId';
             db.query(sql, (err, clients) => {
                 if (err) throw err;
                 const data = { clients };
