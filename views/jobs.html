@@ -94,8 +94,8 @@
                     </a>
 
                     <a href="job_classes" class="list-group-item list-group-item-action py-2 ripple">
-						<i class="fas fa-cubes fa-fw me-3"></i><span>Job Classes</span>
-					</a>
+                        <i class="fas fa-cubes fa-fw me-3"></i><span>Job Classes</span>
+                    </a>
 
                     <a href="clients" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-person-digging fa-fw me-3"></i><span>Workers</span>
@@ -821,28 +821,13 @@
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
-            const selectedRows = dataTable.rows({ selected: true }).data().toArray();
-            const RowData = selectedRows[0];
-
-            let jobId = RowData.Id;
-            let data = {
-                JobId: jobId
-            };
 
             document.getElementById("ModalBodyPre").innerHTML = "";
 
-            if (RowData.WatchDog > 0) {
-                document.getElementById("ModalBodyPre").innerHTML += "<p><b>Auto-Kill (Watchdog):</b><br>" + RowData.WatchDog + " seconds</p>";
-            } else {
-                document.getElementById("ModalBodyPre").innerHTML += "<p><b>Auto-Kill (Watchdog):</b><br>Disabled</p>";
-            };
-
-            if (RowData.Command) {
-                document.getElementById("ModalBodyPre").innerHTML += "<p><b>Command:</b><br>" + RowData.Command + "</p>";
-            };
-
-            if (RowData.CreatedAt) {
-                document.getElementById("ModalBodyPre").innerHTML += "<p><b>Incoming:</b><br>" + RowData.CreatedAt + "</p>";
+            const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+            const RowData = selectedRows[0];
+            let data = {
+                JobId: RowData.Id
             };
 
             $.ajax({
@@ -851,16 +836,39 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function (response) {
-                    let Pre = "";
-                    try {
-                        Pre = response.jobs[0].StdOut;
-                    } catch (error) {
+
+                    if (response.jobs.length > 0) {
+
+                        if (response.jobs[0].WatchDog > 0) {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Auto-Kill (Watchdog):</b><br>" + response.jobs[0].WatchDog + " seconds</p>";
+                        } else {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Auto-Kill (Watchdog):</b><br>Disabled</p>";
+                        };
+
+                        if (response.jobs[0].Command) {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Command:</b><br>" + response.jobs[0].Command + "</p>";
+                        };
+
+                        if (response.jobs[0].CreatedAt) {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Incoming:</b><br>" + response.jobs[0].CreatedAt + "</p>";
+                        };
+
+                        if (response.jobs[0].StartedAt) {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Started:</b><br>" + response.jobs[0].StartedAt + "</p>";
+                        };
+
+                        if (response.jobs[0].FinishedAt) {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Finished:</b><br>" + response.jobs[0].FinishedAt + "</p>";
+                        };
+
+                        if (response.jobs[0].StdOut) {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Result:</b><br>" + response.jobs[0].StdOut + "</p>";
+                        } else {
+                            document.getElementById("ModalBodyPre").innerHTML += "<p><b>Result:</b><br>No log available!</p>";
+                        };
+
                     }
-                    if (!Pre) {
-                        document.getElementById("ModalBodyPre").innerHTML += "<p><b>Result:</b><br>No log available!</p>";
-                    } else {
-                        document.getElementById("ModalBodyPre").innerHTML += "<p><b>Result:</b><br>" + Pre + "</p>";
-                    };
+
                     $('#DetailsModal').modal("show");
                 },
                 error: function (error) {
