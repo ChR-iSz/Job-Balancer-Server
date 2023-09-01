@@ -8,7 +8,7 @@
 
     <title>Job Balancer</title>
     <!-- Font Awesome -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
     <!-- MDB -->
@@ -90,21 +90,22 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
-                    <a href="job_classes" class="list-group-item list-group-item-action py-2 ripple">
-						<i class="fas fa-cubes fa-fw me-3"></i><span>Job Classes</span>
-					</a>
+                    <a href="worker_classes" class="list-group-item list-group-item-action py-2 ripple">
+                        <i class="fas fa-cubes fa-fw me-3"></i><span>Worker Classes</span>
+                    </a>
 
-                    <a href="clients" class="list-group-item list-group-item-action py-2 ripple active"  aria-current="true">
-						<i class="fas fa-person-digging fa-fw me-3"></i><span>Workers</span>
+                    <a href="clients" class="list-group-item list-group-item-action py-2 ripple active"
+                        aria-current="true">
+                        <i class="fas fa-person-digging fa-fw me-3"></i><span>Workers</span>
                     </a>
 
                     <a href="jobs" class="list-group-item list-group-item-action py-2 ripple">
-						<i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
+                        <i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
                     </a>
 
                     <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
-						<i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
-					</a>
+                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
+                    </a>
 
                 </div>
             </div>
@@ -410,71 +411,6 @@
 
 
 
-            <div class="row">
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-warning">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-question text-warning fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-info">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="far fa-question text-info fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-success">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-question text-success fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 class="text-danger">ToDo</h3>
-                                    <p class="mb-0">ToDo</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="far fa-question text-danger fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
 
             <!-- Section: Datatable -->
             <section class="mb-4">
@@ -565,23 +501,6 @@
                         };
                     },
                 }, {
-                    data: 'HostName',
-                    title: 'Worker',
-                    width: '1px',
-                    className: "dt-nowrap",
-                },
-                {
-                    data: 'IpAddress',
-                    title: 'IpAddress',
-                    width: '1px',
-                    className: "dt-nowrap",
-                },
-                {
-                    data: 'Port',
-                    title: 'Port',
-                    width: '1px',
-                    className: "dt-nowrap",
-                },{
                     data: 'UseSSL',
                     title: 'UseSSL',
                     width: '1px',
@@ -599,12 +518,42 @@
                                 break;
                         };
                     },
+                },{
+                    data: 'HostName',
+                    title: 'Worker',
+                    width: '1px',
+                    className: "dt-nowrap",
                 },
+                {
+                    data: 'IpAddress',
+                    title: 'IpAddress',
+                    width: '1px',
+                    className: "dt-nowrap",
+                },
+                {
+                    data: 'Port',
+                    title: 'Port',
+                    width: '1px',
+                    className: "dt-nowrap",
+                }, 
                 {
                     data: 'Fqdn',
                     title: 'Domain',
                 }
-            ]
+            ],
+            drawCallback: function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+                var myData = api.rows({ page: 'current' }).data();
+                api.column(0, { page: 'current' }).data().each(function (group, i) {
+                    let WorkerClassName = myData[i].WorkerClassName;
+                    if (last !== WorkerClassName) {
+                        $(rows).eq(i).before('<tr class="group" style="line-height: 5px; background-color: #dfe7f6"><td colspan="10" class="TableHeader"></i>' + WorkerClassName + '</td></tr>');
+                        last = WorkerClassName;
+                    };
+                });
+            },
         });
 
         $('.editButton').click(function (e) {

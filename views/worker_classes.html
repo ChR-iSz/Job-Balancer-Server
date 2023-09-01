@@ -34,12 +34,12 @@
 
 
     <!-- Das Modal -->
-    <div class="modal fade" id="jobClassesModal" tabindex="-1" aria-labelledby="jobClassesModalLabel"
+    <div class="modal fade" id="workerClassesModal" tabindex="-1" aria-labelledby="workerClassesModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="jobClassesModalLabel"></h5>
+                    <h5 class="modal-title" id="workerClassesModalLabel"></h5>
                     <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -61,8 +61,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Abort</button>
-                    <button type="button" class="btn btn-primary d-none" id="bt_createJobClass">Save changes</button>
-                    <button type="button" class="btn btn-primary d-none" id="bt_editJobClass">Save changes</button>
+                    <button type="button" class="btn btn-primary d-none" id="bt_createWorkerClass">Save changes</button>
+                    <button type="button" class="btn btn-primary d-none" id="bt_editWorkerClass">Save changes</button>
                 </div>
             </div>
         </div>
@@ -91,9 +91,9 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
-                    <a href="job_classes" class="list-group-item list-group-item-action py-2 ripple active"
+                    <a href="worker_classes" class="list-group-item list-group-item-action py-2 ripple active"
                         aria-current="true">
-                        <i class="fas fa-cubes fa-fw me-3"></i><span>Job Classes</span>
+                        <i class="fas fa-cubes fa-fw me-3"></i><span>Worker Classes</span>
                     </a>
 
                     <a href="clients" class="list-group-item list-group-item-action py-2 ripple">
@@ -431,7 +431,7 @@
                             Delete
                         </button>
                         <div class="table-responsive">
-                            <table id="JobClassesTable"
+                            <table id="WorkerClassesTable"
                                 class="table table-bordered table-striped table-hover dt-responsive"
                                 style="width: 100%"></table>
                         </div>
@@ -472,14 +472,14 @@
 
     $(document).ready(function () {
 
-        const dataTable = $('#JobClassesTable').DataTable({
+        const dataTable = $('#WorkerClassesTable').DataTable({
             dom: 'Brtip',
             processing: false,
             serverSide: false,
             serverMethod: 'get',
             ajax: {
-                url: '/getJobClasses',
-                dataSrc: 'job_classes'
+                url: '/getWorkerClasses',
+                dataSrc: 'worker_classes'
             },
             aaSorting: [],
             responsitive: true,
@@ -552,12 +552,12 @@
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
-            $("#bt_createJobClass").addClass('d-block').removeClass('d-none');
-            $("#bt_editJobClass").addClass('d-none').removeClass('d-block');
-            document.getElementById("jobClassesModalLabel").innerText = "Create Job-Class";
+            $("#bt_createWorkerClass").addClass('d-block').removeClass('d-none');
+            $("#bt_editWorkerClass").addClass('d-none').removeClass('d-block');
+            document.getElementById("workerClassesModalLabel").innerText = "Create Job-Class";
             document.getElementById("Name").value = "";
             document.getElementById("MaxJobs").value = "";
-            $('#jobClassesModal').modal('show');
+            $('#workerClassesModal').modal('show');
             return;
         });
 
@@ -565,14 +565,14 @@
             e.preventDefault;
             e.stopImmediatePropagation;
             e.stopPropagation;
-            $("#bt_createJobClass").addClass('d-none').removeClass('d-block');
-            $("#bt_editJobClass").addClass('d-block').removeClass('d-none');
-            document.getElementById("jobClassesModalLabel").innerText = "Edit Job-Class";
+            $("#bt_createWorkerClass").addClass('d-none').removeClass('d-block');
+            $("#bt_editWorkerClass").addClass('d-block').removeClass('d-none');
+            document.getElementById("workerClassesModalLabel").innerText = "Edit Job-Class";
             const selectedRows = dataTable.rows('.selected').data();
             if (selectedRows.length > 0) {
                 document.getElementById("Name").value = selectedRows[0].Name;
                 document.getElementById("MaxJobs").value = selectedRows[0].MaxJobs;
-                $('#jobClassesModal').modal('show');
+                $('#workerClassesModal').modal('show');
             } else {
                 alert("No item selected!");
             }
@@ -590,12 +590,12 @@
                 return;
             };
 
-            document.getElementById("jobClassesModalLabel").innerText = selectedRows[0].Name;
+            document.getElementById("workerClassesModalLabel").innerText = selectedRows[0].Name;
             if (selectedRows.length > 0) {
                 const deleteData = {
                     Id: selectedRows[0].Id,
                 };
-                fetch('/deleteJobClass', {
+                fetch('/deleteWorkerClass', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -623,7 +623,7 @@
             return;
         });
 
-        $('#bt_createJobClass').click(function (e) {
+        $('#bt_createWorkerClass').click(function (e) {
 
             e.preventDefault;
             e.stopImmediatePropagation;
@@ -634,7 +634,7 @@
                 MaxJobs: $('#MaxJobs').val(),
             };
 
-            fetch('/createJobClass', {
+            fetch('/createWorkerClass', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -645,7 +645,7 @@
                 .then(data => {
                     if (data.result) {
                         dataTable.ajax.reload(null, false);
-                        $('#jobClassesModal').modal('hide');
+                        $('#workerClassesModal').modal('hide');
                     } else {
                         alert("Error. Please check your input!");
                     };
@@ -656,7 +656,7 @@
         });
 
 
-        $('#bt_editJobClass').click(function (e) {
+        $('#bt_editWorkerClass').click(function (e) {
 
             e.preventDefault;
             e.stopImmediatePropagation;
@@ -669,7 +669,7 @@
                 MaxJobs: $('#MaxJobs').val(),
             };
 
-            fetch('/editJobClass', {
+            fetch('/editWorkerClass', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -680,7 +680,7 @@
                 .then(data => {
                     if (data.result) {
                         dataTable.ajax.reload(null, false);
-                        $('#jobClassesModal').modal('hide');
+                        $('#workerClassesModal').modal('hide');
                     } else {
                         alert("Error. Please check your input!");
                     };

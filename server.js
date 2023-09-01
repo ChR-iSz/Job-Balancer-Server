@@ -253,14 +253,14 @@ async function main() {
 
 
     /**
-     * ✅ API - Get JobClasses;
+     * ✅ API - Get WorkerClasses;
      */
-    app.get('/getJobClasses', function (req, res, next) {
+    app.get('/getWorkerClasses', function (req, res, next) {
         if (req.session.user) {
-            let sql = 'SELECT Id, Name, MaxJobs FROM JOB_CLASSES';
-            db.query(sql, (err, job_classes) => {
+            let sql = 'SELECT Id, Name, MaxJobs FROM WORKER_CLASSES';
+            db.query(sql, (err, worker_classes) => {
                 if (err) throw err;
-                const data = { job_classes };
+                const data = { worker_classes };
                 res.json(data)
             });
         } else {
@@ -269,19 +269,19 @@ async function main() {
     });
 
     /**
-     * ✅ Create JobClass;
+     * ✅ Create WorkerClass;
      */
-    app.post('/createJobClass', async (req, res) => {
+    app.post('/createWorkerClass', async (req, res) => {
         if (req.session.user) {
             if (validator.isEmpty(req.body.Name)) throw res.json({ result: false, message: "Required", object: "Name" });
             if (validator.isEmpty(req.body.MaxJobs)) throw res.json({ result: false, message: "Required", object: "MaxJobs" });
 
-            let sql = 'INSERT INTO JOB_CLASSES (Name, MaxJobs) VALUES (?, ?);';
+            let sql = 'INSERT INTO WORKER_CLASSES (Name, MaxJobs) VALUES (?, ?);';
             db.query(sql, [req.body.Name, req.body.MaxJobs], (err, jobs) => {
                 if (err) {
                     res.json({ result: false, message: 'Unexpected error!' });
                 } else {
-                    res.json({ result: true, message: 'Insert job_class success!' });
+                    res.json({ result: true, message: 'Insert worker_class success!' });
                 };
             });
         } else {
@@ -290,19 +290,19 @@ async function main() {
     });
 
     /**
-     * ✅ Edit JobClass;
+     * ✅ Edit WorkerClass;
      */
-    app.post('/editJobClass', (req, res) => {
+    app.post('/editWorkerClass', (req, res) => {
         if (req.session.user) {
             if (validator.isEmpty(req.body.Name)) throw res.json({ result: false, message: "Required", object: "Name" });
             if (validator.isEmpty(req.body.MaxJobs)) throw res.json({ result: false, message: "Required", object: "MaxJobs" });
 
-            let sql = 'UPDATE JOB_CLASSES SET Name = ?, MaxJobs = ? WHERE Id = ?;';
+            let sql = 'UPDATE WORKER_CLASSES SET Name = ?, MaxJobs = ? WHERE Id = ?;';
             db.query(sql, [req.body.Name, req.body.MaxJobs, req.body.Id], (err, jobs) => {
                 if (err) {
                     res.json({ result: false, message: 'Unexpected error!' });
                 } else {
-                    res.json({ result: true, message: 'Update job_class success!' });
+                    res.json({ result: true, message: 'Update worker_class success!' });
                 };
             });
         } else {
@@ -311,16 +311,16 @@ async function main() {
     });
 
     /**
-     * ✅ Delete JobClass;
+     * ✅ Delete WorkerClass;
      */
-    app.post('/deleteJobClass', (req, res) => {
+    app.post('/deleteWorkerClass', (req, res) => {
         if (req.session.user) {
-            let sql = 'DELETE FROM JOB_CLASSES WHERE Id = ?;';
+            let sql = 'DELETE FROM WORKER_CLASSES WHERE Id = ?;';
             db.query(sql, [req.body.Id], (err, jobs) => {
                 if (err) {
                     res.json({ result: false, message: 'Unexpected error!' });
                 } else {
-                    res.json({ result: true, message: 'Deleting job_class successfully!' });
+                    res.json({ result: true, message: 'Deleting worker_class successfully!' });
                 };
             });
         } else {
@@ -347,11 +347,11 @@ async function main() {
     });
 
     /**
-     * ✅ [VIEW] - JobClasses;
+     * ✅ [VIEW] - WorkerClasses;
      */
-    app.get("/job_classes", (req, res) => {
+    app.get("/worker_classes", (req, res) => {
         if (req.session.user) {
-            res.sendFile(path.join(__dirname, 'views/job_classes.html'))
+            res.sendFile(path.join(__dirname, 'views/worker_classes.html'))
         } else {
             res.redirect('/login');
         };
@@ -529,7 +529,7 @@ async function main() {
      * ✅ API - Add Job;
      */
     app.post('/addJob', async (req, res) => {
-        let { scriptId, command, params = [], userName, apiKey, watchdog = 0 } = req.body;
+        let { scriptId, command, params = [], userName, apiKey, watchdog = 0, workerClassId = 1 } = req.body;
 
         params = params || [];
         const paramString = params.map(param => `"${param}"`).join(' ');
@@ -577,7 +577,7 @@ async function main() {
                             var JobId = result.insertId;
                             console.info(`[INFO] New Job with Id ${JobId} added!`);
                             res.status(200).json({ result: true, message: 'Add job sucessfully.' });
-                            let BestWorker = await tools.getBestWorker();
+                            let BestWorker = await tools.getBestWorker(workerClassId);
                             if (BestWorker) {
                                 let ApiKey = BestWorker.ApiKey;
                                 try {
@@ -616,7 +616,7 @@ async function main() {
                         var JobId = result.insertId;
                         console.info(`[INFO] New Job with Id ${JobId} added!`);
                         res.status(200).json({ result: true, message: 'Add job sucessfully.' });
-                        let BestWorker = await tools.getBestWorker();
+                        let BestWorker = await tools.getBestWorker(workerClassId);
                         if (BestWorker) {
                             let ApiKey = BestWorker.ApiKey;
                             try {
@@ -684,7 +684,7 @@ async function main() {
      */
     app.get('/getClients', function (req, res, next) {
         if (req.session.user) {
-            let sql = 'SELECT CLIENTS.Id, CLIENTS.StateId, CLIENTS.HostName, CLIENTS.IpAddress, CLIENTS.Port, CLIENTS.UseSSL, CLIENTS.Fqdn, JOB_CLASSES.Name as JobClassName FROM CLIENTS LEFT JOIN JOB_CLASSES ON JOB_CLASSES.Id = CLIENTS.JobClassId';
+            let sql = 'SELECT CLIENTS.Id, CLIENTS.StateId, CLIENTS.HostName, CLIENTS.IpAddress, CLIENTS.Port, CLIENTS.UseSSL, CLIENTS.Fqdn, WORKER_CLASSES.Name as WorkerClassName FROM CLIENTS LEFT JOIN WORKER_CLASSES ON WORKER_CLASSES.Id = CLIENTS.WorkerClassId';
             db.query(sql, (err, clients) => {
                 if (err) throw err;
                 const data = { clients };

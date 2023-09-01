@@ -75,6 +75,17 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' https://your-domain:your-port/addJob
 ```
 
+### Normal Job (with worker-class)
+Worker Classes can be created in the web interface. These can, for example, represent geo-based locations or indicate hardware power, such as hardware transcoding (Quicksync), powerful CPU for Ffmpeg, etc.
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+    "command": "echo \"Hello World\"",
+    "workerClassId": "1",
+    "userName": "your-username",
+    "apiKey": "your-apikey"
+}' https://your-domain:your-port/addJob
+```
+
 ### Normal Job (with auto-kill-watchdog after 10 seconds)
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -111,11 +122,11 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 ## Outlook / Roadmap
 
-- Introduction of job classes, allowing jobs to be limited to specific workers assigned to corresponding job classes. Job classes can be freely created, for example, to execute geo-based tasks.
+- Introduction of Worker Classes, allowing jobs to be limited to specific workers assigned to corresponding Worker Classes. Worker Classes can be freely created, for example, to execute geo-based tasks.
 - Limitation of the maximum number of jobs per worker in the web interface.
 - Job restarts via the web interface.
 - Time-based job execution (scheduling).
-- User rights management for restricting jobs or job classes.
+- User rights management for restricting jobs or Worker Classes.
 - Worker > Server availability checks.
 
 ## General

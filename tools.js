@@ -370,7 +370,7 @@ async function checkAllClientsBySocket() {
 
 };
 
-async function getBestWorker() {
+async function getBestWorker(workerClassId) {
 
     var connection = database.connection;
 
@@ -378,8 +378,7 @@ async function getBestWorker() {
 
         return await new Promise((resolve, reject) => {
 
-            //const GetBestWorker = 'SELECT Id, Serial, ApiKey, IpAddress, Port, UseSSL, Fqdn, (SELECT COUNT(*) FROM JOBS WHERE WorkerId = CLIENTS.Id AND ( JOBS.StateId = 1 OR JOBS.StateId = 2) ) as RunningJobs from CLIENTS WHERE StateId = 1 ORDER BY RunningJobs ASC, HostName ASC LIMIT 1;';
-
+            // const GetBestWorker = 'SELECT Id, Serial, ApiKey, IpAddress, Port, UseSSL, Fqdn, (SELECT COUNT(*) FROM JOBS WHERE WorkerId = CLIENTS.Id AND ( JOBS.StateId = 1 OR JOBS.StateId = 2) ) as RunningJobs from CLIENTS WHERE StateId = 1 ORDER BY RunningJobs ASC, HostName ASC LIMIT 1;';
             const GetBestWorker = `SELECT 
             C.Id, C.Serial, C.ApiKey, C.IpAddress, C.Port, C.UseSSL, C.Fqdn,
             (
@@ -390,13 +389,13 @@ async function getBestWorker() {
             ) AS RunningJobs,
             JC.MaxJobs
             FROM CLIENTS AS C
-            JOIN JOB_CLASSES AS JC ON C.JobClassId = JC.Id
-            WHERE C.StateId = 1
+            JOIN WORKER_CLASSES AS JC ON C.WorkerClassId = JC.Id
+            WHERE C.StateId = 1 AND C.WorkerClassId = ?
             HAVING RunningJobs < JC.MaxJobs
             ORDER BY RunningJobs ASC, C.HostName ASC 
             LIMIT 1;`;
 
-            connection.query(GetBestWorker, (err, res) => {
+            connection.query(GetBestWorker, [workerClassId], (err, res) => {
                 if (err) {
                     return reject(false);
                 } else {
