@@ -684,7 +684,7 @@ async function main() {
      */
     app.get('/getClients', function (req, res, next) {
         if (req.session.user) {
-            let sql = 'SELECT CLIENTS.Id, CLIENTS.StateId, CLIENTS.HostName, CLIENTS.IpAddress, CLIENTS.Port, CLIENTS.UseSSL, CLIENTS.Fqdn, WORKER_CLASSES.Name as WorkerClassName FROM CLIENTS LEFT JOIN WORKER_CLASSES ON WORKER_CLASSES.Id = CLIENTS.WorkerClassId';
+            let sql = 'SELECT CLIENTS.Id, CLIENTS.StateId, CLIENTS.HostName, CLIENTS.IpAddress, CLIENTS.Port, CLIENTS.UseSSL, CLIENTS.Fqdn, WORKER_CLASSES.Name as WorkerClassName, WORKER_CLASSES.MaxJobs FROM CLIENTS LEFT JOIN WORKER_CLASSES ON WORKER_CLASSES.Id = CLIENTS.WorkerClassId';
             db.query(sql, (err, clients) => {
                 if (err) throw err;
                 const data = { clients };

@@ -172,6 +172,11 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
+                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple active"
+                        aria-current="true">
+                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
+                    </a>
+
                     <a href="worker_classes" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-cubes fa-fw me-3"></i><span>Worker Classes</span>
                     </a>
@@ -182,11 +187,6 @@
 
                     <a href="jobs" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
-                    </a>
-
-                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple active"
-                        aria-current="true">
-                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
                     </a>
 
                 </div>
@@ -473,7 +473,15 @@
 
         <div class="container pt-4">
 
-
+            <section class="mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        ℹ️ On the "Scripts" page you have the possibility to create scripts in various common
+                        programming languages directly in the web browser. These scripts are stored in the database. If
+                        you submit a job with a "scriptId", the content is saved as a file and executed on the worker
+                        when the job is executed. You can also give the script parameters when submitting it.
+                    </div>
+            </section>
 
 
 

@@ -90,6 +90,10 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
+                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
+                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
+                    </a>
+
                     <a href="worker_classes" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-cubes fa-fw me-3"></i><span>Worker Classes</span>
                     </a>
@@ -101,10 +105,6 @@
 
                     <a href="jobs" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
-                    </a>
-
-                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
-                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
                     </a>
 
                 </div>
@@ -389,28 +389,17 @@
     <!--Main layout-->
     <main style="margin-top: 58px">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <div class="container pt-4">
 
-
-
-
-
-
+            <section class="mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        ℹ️ On the "Workers" page, you'll find the client machines, also referred to as "Workers,"
+                        responsible for executing the submitted jobs. When you start the "Job Balancer Client" on a
+                        worker, it registers itself with the database and becomes visible here. Additionally, the server
+                        periodically checks if these machines are available and responding correctly.
+                    </div>
+            </section>
 
             <!-- Section: Datatable -->
             <section class="mb-4">
@@ -518,7 +507,7 @@
                                 break;
                         };
                     },
-                },{
+                }, {
                     data: 'HostName',
                     title: 'Worker',
                     width: '1px',
@@ -535,7 +524,7 @@
                     title: 'Port',
                     width: '1px',
                     className: "dt-nowrap",
-                }, 
+                },
                 {
                     data: 'Fqdn',
                     title: 'Domain',
@@ -548,8 +537,10 @@
                 var myData = api.rows({ page: 'current' }).data();
                 api.column(0, { page: 'current' }).data().each(function (group, i) {
                     let WorkerClassName = myData[i].WorkerClassName;
+                    let MaxJobs = myData[i].MaxJobs;
+
                     if (last !== WorkerClassName) {
-                        $(rows).eq(i).before('<tr class="group" style="line-height: 5px; background-color: #dfe7f6"><td colspan="10" class="TableHeader"></i>' + WorkerClassName + '</td></tr>');
+                        $(rows).eq(i).before('<tr class="group" style="line-height: 5px; background-color: #dfe7f6"><td colspan="10" class="TableHeader"></i>' + WorkerClassName + ' (' + MaxJobs + ' jobs simultaneously)</td></tr>');
                         last = WorkerClassName;
                     };
                 });

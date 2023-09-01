@@ -93,6 +93,10 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
+                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
+                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
+                    </a>
+
                     <a href="worker_classes" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-cubes fa-fw me-3"></i><span>Worker Classes</span>
                     </a>
@@ -104,10 +108,6 @@
                     <a href="jobs" class="list-group-item list-group-item-action py-2 ripple active"
                         aria-current="true">
                         <i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
-                    </a>
-
-                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
-                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
                     </a>
 
                 </div>
@@ -393,112 +393,17 @@
     <!--Main layout-->
     <main style="margin-top: 58px">
 
-
-
         <div class="container pt-4">
 
-            <div class="row">
-
-                <div class="col-xl-4 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 id="RecordsTotal" class="text-warning">&nbsp;</h3>
-                                    <p class="mb-0">Total Jobs</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-star text-warning fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
+            <section class="mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        ℹ️ On the "Jobs" page, you'll find an overview of all jobs that have been sent to the server,
+                        along with their respective statuses. You have the capability to terminate running jobs, restart
+                        failed or completed jobs, and view a comprehensive log for each job. This log includes details
+                        such as job start and stop times, as well as the entire job return value.
                     </div>
-                </div>
-
-                <div class="col-xl-4 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 id="waitingCount" class="text-info">&nbsp;</h3>
-                                    <p class="mb-0">Waiting Jobs</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-clock text-info fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 id="runningCount" class="text-info">&nbsp;</h3>
-                                    <p class="mb-0">Running Jobs</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-rocket text-info fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 id="doneCount" class="text-success">&nbsp;</h3>
-                                    <p class="mb-0">Finished Jobs</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-check text-success fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 id="errorCount" class="text-danger">&nbsp;</h3>
-                                    <p class="mb-0">Errors Jobs</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-thumbs-down text-danger fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4 col-sm-6 col-12 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between px-md-1">
-                                <div>
-                                    <h3 id="watchdogCount" class="text-dark">&nbsp;</h3>
-                                    <p class="mb-0">Watchdog-Killed Jobs</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-stopwatch text-dark fa-3x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-
-
+            </section>
 
             <!-- Section: Datatable -->
             <section class="mb-4">
@@ -571,38 +476,34 @@
             'serverSide': true,
             'serverMethod': 'get',
             'language': {
-                'search': '', // Leeren Sie den Suchfeld-Text
-                'searchPlaceholder': 'Search...' // Fügen Sie hier Ihren gewünschten Platzhaltertext hinzu
+                'search': '',
+                'searchPlaceholder': 'Search...'
             },
             'ajax': {
                 'url': '/getJobs',
                 data: function (data) {
-                    data.page = (data.start / data.length) + 1; // Berechnung der aktuellen Seite
-                    data.perPage = data.length; // Seitenlänge
-                    data.search.value = data.search.value; // Übertrage den Suchbegriff
+                    data.page = (data.start / data.length) + 1;
+                    data.perPage = data.length;
+                    data.search.value = data.search.value;
                 },
                 dataSrc: function (response) {
-                    return response.data; // Die Datenquelle aus der Antwort
+                    return response.data;
                 },
                 complete: function (response) {
-                    // Die Gesamtanzahl der Einträge in der DataTable aktualisieren
-                    //dataTable.rows().invalidate().draw(false);
+                    /*
                     const TotalJobs = response.responseJSON.recordsTotal;
                     const waitingCount = response.responseJSON.waitingCount;
                     const runningCount = response.responseJSON.runningCount;
                     const doneCount = response.responseJSON.doneCount;
                     const errorCount = response.responseJSON.errorCount;
-                    //const killedCount = response.responseJSON.killedCount;
                     const watchdogCount = response.responseJSON.watchdogCount;
-
                     document.getElementById("RecordsTotal").innerText = TotalJobs;
                     document.getElementById("waitingCount").innerText = waitingCount ?? "?";
                     document.getElementById("runningCount").innerText = runningCount ?? "?";
                     document.getElementById("doneCount").innerText = doneCount ?? "?";
                     document.getElementById("errorCount").innerText = errorCount ?? "?";
-                    //document.getElementById("killedCount").innerText = killedCount ?? "?";
                     document.getElementById("watchdogCount").innerText = watchdogCount ?? "?";
-
+                    */
                 },
             },
             "pageLength": 50,

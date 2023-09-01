@@ -38,6 +38,10 @@
 						<i class="fas fa-users fa-fw me-3"></i><span>Users</span>
 					</a>
 
+					<a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
+						<i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
+					</a>
+
 					<a href="worker_classes" class="list-group-item list-group-item-action py-2 ripple">
 						<i class="fas fa-cubes fa-fw me-3"></i><span>Worker Classes</span>
 					</a>
@@ -48,10 +52,6 @@
 
 					<a href="jobs" class="list-group-item list-group-item-action py-2 ripple">
 						<i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
-					</a>
-
-					<a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
-						<i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
 					</a>
 
 				</div>
@@ -356,70 +356,105 @@
 
 
 
+            <div class="row">
 
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="RecordsTotal" class="text-warning">&nbsp;</h3>
+                                    <p class="mb-0">Total Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-star text-warning fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-			<div class="row">
-				<div class="col-xl-3 col-sm-6 col-12 mb-4">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex justify-content-between px-md-1">
-								<div>
-									<h3 class="text-warning">ToDo</h3>
-									<p class="mb-0">Workers</p>
-								</div>
-								<div class="align-self-center">
-									<i class="fas fa-rocket text-warning fa-3x"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xl-3 col-sm-6 col-12 mb-4">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex justify-content-between px-md-1">
-								<div>
-									<h3 class="text-info">ToDo</h3>
-									<p class="mb-0">Jobs</p>
-								</div>
-								<div class="align-self-center">
-									<i class="far fa-user text-info fa-3x"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xl-3 col-sm-6 col-12 mb-4">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex justify-content-between px-md-1">
-								<div>
-									<h3 class="text-success">ToDo</h3>
-									<p class="mb-0">Success</p>
-								</div>
-								<div class="align-self-center">
-									<i class="fas fa-chart-pie text-success fa-3x"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xl-3 col-sm-6 col-12 mb-4">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex justify-content-between px-md-1">
-								<div>
-									<h3 class="text-danger">ToDo</h3>
-									<p class="mb-0">Errors</p>
-								</div>
-								<div class="align-self-center">
-									<i class="far fa-life-ring text-danger fa-3x"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="waitingCount" class="text-info">&nbsp;</h3>
+                                    <p class="mb-0">Waiting Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-clock text-info fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="runningCount" class="text-info">&nbsp;</h3>
+                                    <p class="mb-0">Running Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-rocket text-info fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="doneCount" class="text-success">&nbsp;</h3>
+                                    <p class="mb-0">Finished Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-check text-success fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="errorCount" class="text-danger">&nbsp;</h3>
+                                    <p class="mb-0">Errors Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-thumbs-down text-danger fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-6 col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div>
+                                    <h3 id="watchdogCount" class="text-dark">&nbsp;</h3>
+                                    <p class="mb-0">Watchdog-Killed Jobs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="fas fa-stopwatch text-dark fa-3x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
 
 

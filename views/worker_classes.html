@@ -91,6 +91,10 @@
                         <i class="fas fa-users fa-fw me-3"></i><span>Users</span>
                     </a>
 
+                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
+                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
+                    </a>
+
                     <a href="worker_classes" class="list-group-item list-group-item-action py-2 ripple active"
                         aria-current="true">
                         <i class="fas fa-cubes fa-fw me-3"></i><span>Worker Classes</span>
@@ -102,10 +106,6 @@
 
                     <a href="jobs" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-list-check fa-fw me-3"></i><span>Jobs</span>
-                    </a>
-
-                    <a href="scripts" class="list-group-item list-group-item-action py-2 ripple">
-                        <i class="fas fa-code fa-fw me-3"></i><span>Scripts</span>
                     </a>
 
                 </div>
@@ -407,8 +407,20 @@
 
         <div class="container pt-4">
 
+            <section class="mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        ℹ️ The "Worker Classes" enable the assignment of client computers (workers) to certain classes.
+                        These classes can, for example, contain information about the hardware properties of the worker,
+                        such as "High CPU power", "Low CPU power" or geographical locations, etc. You have the
+                        flexibility to create classes according to your requirements and to set a maximum number of
+                        concurrent jobs per class. As an example, a class such as "Transcoding Intel Core i9" could run
+                        up to 10 concurrent jobs, while a class such as "Transcoding Intel Core i3" can only handle up
+                        to 5 concurrent jobs. When jobs are submitted, they are then distributed to the workers
+                        according to their maximum executable concurrent jobs.
 
-
+                    </div>
+            </section>
 
 
 
@@ -417,7 +429,7 @@
                 <div class="card">
                     <div class="card-header text-left py-3">
                         <h5 class="mb-0 text-left">
-                            <strong>Job-Classes</strong>
+                            <strong>Worker Classes</strong>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -498,7 +510,7 @@
                 },
                 {
                     data: 'MaxJobs',
-                    title: 'Max Jobs',
+                    title: 'Max jobs simultaneously',
                     width: '1px',
                     className: "dt-nowrap",
                     render: function (data, type, full, meta) {
@@ -522,12 +534,12 @@
 
                 if (selectedRows.length == 1) {
 
-                    if ( selectedRows[0].Id == 1 ) {
+                    if (selectedRows[0].Id == 1) {
                         document.getElementById("editButton").disabled = false;
                         document.getElementById("deleteButton").disabled = true;
-                    }else{
+                    } else {
                         document.getElementById("editButton").disabled = false;
-                    document.getElementById("deleteButton").disabled = false;
+                        document.getElementById("deleteButton").disabled = false;
                     }
 
 
@@ -554,7 +566,7 @@
             e.stopPropagation;
             $("#bt_createWorkerClass").addClass('d-block').removeClass('d-none');
             $("#bt_editWorkerClass").addClass('d-none').removeClass('d-block');
-            document.getElementById("workerClassesModalLabel").innerText = "Create Job-Class";
+            document.getElementById("workerClassesModalLabel").innerText = "Create Worker-Class";
             document.getElementById("Name").value = "";
             document.getElementById("MaxJobs").value = "";
             $('#workerClassesModal').modal('show');
@@ -567,7 +579,7 @@
             e.stopPropagation;
             $("#bt_createWorkerClass").addClass('d-none').removeClass('d-block');
             $("#bt_editWorkerClass").addClass('d-block').removeClass('d-none');
-            document.getElementById("workerClassesModalLabel").innerText = "Edit Job-Class";
+            document.getElementById("workerClassesModalLabel").innerText = "Edit Worker-Class";
             const selectedRows = dataTable.rows('.selected').data();
             if (selectedRows.length > 0) {
                 document.getElementById("Name").value = selectedRows[0].Name;
@@ -585,7 +597,7 @@
             e.stopPropagation;
             const selectedRows = dataTable.rows('.selected').data();
 
-            if ( selectedRows[0].Id == 1 ) {
+            if (selectedRows[0].Id == 1) {
                 alert("The default job class cannot be deleted.");
                 return;
             };
