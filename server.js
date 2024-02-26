@@ -650,10 +650,11 @@ async function main() {
  */
     app.post('/restartJob', async (req, res) => {
         if (req.session.user) {
-            const { JobId } = req.body;
+            const { JobId, workerClassId = 1 } = req.body;
             try {
-                let BestWorker = await tools.getBestWorker();
+                let BestWorker = await tools.getBestWorker(workerClassId);
                 let ApiKey = BestWorker.ApiKey;
+                console.log(BestWorker);
                 if (BestWorker.IpAddress) {
                     let AxiosResult;
                     const Protokoll = BestWorker.UseSSL ? 'https://' : 'http://';
@@ -705,7 +706,7 @@ async function main() {
             const searchTerm = req.query.search.value || ''; // Suchbegriff vom Benutzer
             const offset = (page - 1) * perPage;
             let sql = `
-                SELECT JOBS.Id, JOBS.StateId, CLIENTS.HostName, JOBS.Command, JOBS.WatchDog, JOBS.ReturnCode, JOBS.CreatedAt, JOBS.StartedAt, JOBS.FinishedAt
+                SELECT JOBS.Id, JOBS.StateId, CLIENTS.HostName, CLIENTS.WorkerClassId, JOBS.Command, JOBS.WatchDog, JOBS.ReturnCode, JOBS.CreatedAt, JOBS.StartedAt, JOBS.FinishedAt
                 FROM JOBS
                 LEFT JOIN CLIENTS ON CLIENTS.Id = JOBS.WorkerId
             `;
@@ -768,7 +769,7 @@ async function main() {
     app.post('/getJobDetails', function (req, res, next) {
         if (req.session.user) {
             const jobId = req.body.JobId;
-        //    let sql = 'SELECT LOGGING.StdOut, JOBS.Id, JOBS.StateId, CLIENTS.HostName, JOBS.Command, JOBS.WatchDog, JOBS.ReturnCode, JOBS.CreatedAt, JOBS.StartedAt, JOBS.FinishedAt FROM LOGGING  LEFT JOIN JOBS ON JOBS.Id = LOGGING.JobId LEFT JOIN CLIENTS ON CLIENTS.Id = JOBS.WorkerId WHERE LOGGING.JobId = ?;';
+            //    let sql = 'SELECT LOGGING.StdOut, JOBS.Id, JOBS.StateId, CLIENTS.HostName, JOBS.Command, JOBS.WatchDog, JOBS.ReturnCode, JOBS.CreatedAt, JOBS.StartedAt, JOBS.FinishedAt FROM LOGGING  LEFT JOIN JOBS ON JOBS.Id = LOGGING.JobId LEFT JOIN CLIENTS ON CLIENTS.Id = JOBS.WorkerId WHERE LOGGING.JobId = ?;';
             let sql = 'SELECT LOGGING.StdOut, JOBS.Id, JOBS.StateId, CLIENTS.HostName, JOBS.Command, JOBS.WatchDog, JOBS.ReturnCode, JOBS.CreatedAt, JOBS.StartedAt, JOBS.FinishedAt FROM JOBS  LEFT JOIN LOGGING ON LOGGING.JobId = JOBS.Id LEFT JOIN CLIENTS ON CLIENTS.Id = JOBS.WorkerId WHERE JOBS.Id = ?;';
 
             db.query(sql, [jobId], (err, jobs) => {

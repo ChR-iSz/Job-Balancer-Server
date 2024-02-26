@@ -372,6 +372,8 @@ async function checkAllClientsBySocket() {
 
 async function getBestWorker(workerClassId) {
 
+    console.log("[FUNC] getBestWorker -> workerClassId: "+workerClassId);
+
     var connection = database.connection;
 
     try {
@@ -397,7 +399,7 @@ async function getBestWorker(workerClassId) {
 
             connection.query(GetBestWorker, [workerClassId], (err, res) => {
                 if (err) {
-                    return reject(false);
+                    return reject(err);
                 } else {
                     if (res.length > 0 && res[0].Id > 0) {
                         const socket = new net.Socket();
@@ -409,11 +411,11 @@ async function getBestWorker(workerClassId) {
                         socket.on('error', (error) => {
                             console.log(colors.red(`[ERROR] Best Worker found but it is offline: ${res[0].IpAddress}:${res[0].Port}`));
                             socket.destroy();
-                            return reject(false);
+                            return reject(error);
                         });
                     } else {
                         // 🆘 No bestworker found !! What we can do ??? Still keep the waiting status for a job ?
-                        return reject(false);
+                        return reject(res);
                     };
                 };
             });
@@ -422,7 +424,7 @@ async function getBestWorker(workerClassId) {
 
     } catch (error) {
         // 🆘 No bestworker found !! What we can do ??? Still keep the waiting status for a job ?
-        console.error(colors.red(`[ERROR] getBestWorker - ${error}`));
+        console.error(colors.red(`[CATCH-ERROR] getBestWorker failed - ${error}`));
         return false;
 
     };

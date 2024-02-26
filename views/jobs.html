@@ -694,8 +694,10 @@
             e.stopImmediatePropagation;
             e.stopPropagation;
             const selectedRows = dataTable.rows({ selected: true }).data().toArray();
+            console.log(selectedRows);
             const postData = {
                 JobId: selectedRows[0].Id,
+                
             };
             fetch('/restartJob', {
                 method: 'POST',
